@@ -3,7 +3,6 @@ using Microsoft.Xna.Framework.Graphics;
 using System.IO;
 using Terraria;
 using Terraria.Audio;
-using Terraria.DataStructures;
 using Terraria.GameContent;
 using Terraria.ID;
 using Terraria.ModLoader;
@@ -55,16 +54,22 @@ public class ItemScraper
 
         Texture2D texture = TextureAssets.Item[id].Value;
 
+        Rectangle sourceRect;
+        Color[] data;
+        var animation = Main.itemAnimations[id];
+        Texture2D firstFrame;
 
+        if (animation != null)
+        {
+            int frameHeight = texture.Height / animation.FrameCount;
+            sourceRect = new Rectangle(0, 0, texture.Width, frameHeight);
+            data = new Color[sourceRect.Width * sourceRect.Height];
 
-
-        Rectangle sourceRect = new SpriteFrame(1, 1).GetSourceRectangle(texture);
-
-        // Crop to first frame
-        Color[] data = new Color[sourceRect.Width * sourceRect.Height];
-        texture.GetData(0, sourceRect, data, 0, data.Length);
-        Texture2D croppedTexture = new Texture2D(Main.graphics.GraphicsDevice, sourceRect.Width, sourceRect.Height);
-        croppedTexture.SetData(data);
+            texture.GetData(0, sourceRect, data, 0, data.Length);
+            firstFrame = new Texture2D(Main.graphics.GraphicsDevice, sourceRect.Width, sourceRect.Height);
+            firstFrame.SetData(data);
+        }
+        else firstFrame = texture;
 
 
         Directory.CreateDirectory(Path.Combine(itemsPath, folder));
@@ -72,7 +77,7 @@ public class ItemScraper
         string path = Path.Combine(itemsPath, folder, $"{TerraScraper.ValidateFilename(name)}.png");
         using (FileStream stream = File.Create(path))
         {
-            croppedTexture.SaveAsPng(stream, texture.Width, texture.Height);
+            firstFrame.SaveAsPng(stream, firstFrame.Width, firstFrame.Height);
         }
 
 
