@@ -1,0 +1,3 @@
+displayName = TerraScraper
+author = PalmForest
+version = 0.1
