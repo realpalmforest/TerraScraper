@@ -10,6 +10,9 @@ public class RecipeData
     [JsonPropertyName("ingredients")]
     public ItemData[] Ingredients { get; set; }
 
+    [JsonPropertyName("workstations")]
+    public string[] Workstations { get; set; }
+
     [JsonPropertyName("id")]
     public int Id { get; set; }
 }

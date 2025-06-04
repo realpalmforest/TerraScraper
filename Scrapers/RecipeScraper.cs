@@ -1,6 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 using System.Collections.Generic;
 using System.IO;
+using System.Text;
 using System.Text.Json;
 using Terraria;
 using Terraria.Audio;
@@ -40,25 +41,49 @@ public class RecipeScraper
     {
         Item result = recipe.createItem;
         Item[] ingredients = recipe.requiredItem.ToArray();
-        List<int> workstations = recipe.requiredTile;
 
         if (result == null || ingredients == null)
             return;
-
         if (string.IsNullOrEmpty(result.Name) || ingredients.Length == 0)
             return;
+
 
         ItemData[] ingredientDatas = new ItemData[ingredients.Length];
         for (int i = 0; i < ingredients.Length; i++)
         {
-            ingredientDatas[i] = new ItemData() { Name = ingredients[i].Name, Quantity = ingredients[i].stack };
+            ingredientDatas[i] = GetItemData(ingredients[i]);
         }
+
+        //string[] workstations = new string[recipe.requiredTile.Count];
+        //for (int i = 0; i < recipe.requiredTile.Count; i++)
+        //{
+
+        //}
 
         recipeDatas.Add(new RecipeData()
         {
-            Result = new ItemData() { Name = result.Name, Quantity = result.stack },
+            Result = GetItemData(result),
             Ingredients = ingredientDatas,
+
             Id = recipe.RecipeIndex
         });
+    }
+
+    private static ItemData GetItemData(Item item)
+    {
+        StringBuilder tooltip = new StringBuilder();
+
+        for (int j = 0; j < item.ToolTip.Lines; j++)
+        {
+            if (j == item.ToolTip.Lines - 1)
+            {
+                tooltip.Append(item.ToolTip.GetLine(j));
+                break;
+            }
+
+            tooltip.AppendLine(item.ToolTip.GetLine(j));
+        }
+
+        return new ItemData() { Name = item.Name, Tooltip = tooltip.ToString(), Quantity = item.stack };
     }
 }
