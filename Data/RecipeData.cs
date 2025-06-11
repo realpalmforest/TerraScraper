@@ -11,7 +11,7 @@ public class RecipeData
     public ItemData[] Ingredients { get; set; }
 
     [JsonPropertyName("workstations")]
-    public string[] Workstations { get; set; }
+    public ItemData[] Workstations { get; set; }
 
     [JsonPropertyName("id")]
     public int Id { get; set; }

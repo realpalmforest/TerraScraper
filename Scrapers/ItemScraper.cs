@@ -23,26 +23,26 @@ public class ItemScraper
         for (int i = 0; i < ItemLoader.ItemCount; i++)
         {
             string itemName = Lang.GetItemNameValue(i);
-            if (!string.IsNullOrEmpty(itemName))
+
+            if (string.IsNullOrEmpty(itemName))
+                return;
+
+            if (i >= ItemID.Count)
             {
-                if (i >= ItemID.Count)
+                Item item = new Item();
+                item.SetDefaults(i);
+
+                if (item.ModItem != null)
                 {
-                    Item item = new Item();
-                    item.SetDefaults(i);
-
-                    if (item.ModItem != null)
-                    {
-                        ScrapeItem(caller, i, itemName, item.ModItem.Mod.Name);
-                        continue;
-                    }
+                    ScrapeItem(caller, i, itemName, item.ModItem.Mod.Name);
+                    continue;
                 }
-
-                ScrapeItem(caller, i, itemName, "Vanilla");
             }
+
+            ScrapeItem(caller, i, itemName, "Vanilla");
         }
 
         caller.Reply($"\nAll items have been succesfully saved to '{itemsPath}'", Color.LimeGreen);
-
 
         SoundEngine.PlaySound(SoundID.AchievementComplete);
     }
