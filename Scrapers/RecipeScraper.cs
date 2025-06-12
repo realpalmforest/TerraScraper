@@ -11,15 +11,18 @@ using TerraScraper.Data;
 
 namespace TerraScraper.Scrapers;
 
-public class RecipeScraper
+public class RecipeScraper : Scraper
 {
-    private string recipesPath = Path.Combine(TerraScraper.SavePath, "Recipes");
-
     private Dictionary<string, List<RecipeData>> recipeDatas;
 
-    public void ScrapeAllRecipes(CommandCaller caller)
+    public RecipeScraper()
     {
-        Directory.CreateDirectory(recipesPath);
+        SetPath("Recipes");
+    }
+
+    public override void ScrapeAll(CommandCaller caller)
+    {
+        Directory.CreateDirectory(Path);
         SoundEngine.PlaySound(SoundID.Duck);
 
         recipeDatas = new();

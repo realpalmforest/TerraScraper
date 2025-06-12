@@ -2,13 +2,15 @@
 using System;
 using Terraria.ModLoader;
 
-namespace TerraScraper;
+namespace TerraScraper.Utility;
 
-public class ScrapeCommand : ModCommand
+public class CommandHandler : ModCommand
 {
     public override CommandType Type => CommandType.Chat;
     public override string Command => "scrape";
     public override string Description => "Scrapes Terraria for its assets and saved them";
+
+    public Dictionary<string, Scraper>
 
     public override void Action(CommandCaller caller, string input, string[] args)
     {
@@ -22,14 +24,14 @@ public class ScrapeCommand : ModCommand
         {
             switch (args[0].ToLower().Trim())
             {
-                case "help":
-                    ModHelp(caller);
-                    break;
                 case "items":
                     TerraScraper.ItemScraper.ScrapeAllItems(caller);
                     break;
                 case "recipes":
                     TerraScraper.RecipeScraper.ScrapeAllRecipes(caller);
+                    break;
+                default:
+                    ModHelp(caller);
                     break;
             }
         }
