@@ -1,4 +1,5 @@
 ﻿using Microsoft.Xna.Framework;
+using System;
 using Terraria.ModLoader;
 
 namespace TerraScraper;
@@ -17,18 +18,26 @@ public class ScrapeCommand : ModCommand
             return;
         }
 
-        switch (args[0].ToLower().Trim())
+        try
         {
-            case "help":
-                ModHelp(caller);
-                break;
-            case "items":
-                TerraScraper.ItemScraper.ScrapeAllItems(caller);
-                break;
-            case "recipes":
-                TerraScraper.RecipeScraper.ScrapeAllRecipes(caller);
-                break;
+            switch (args[0].ToLower().Trim())
+            {
+                case "help":
+                    ModHelp(caller);
+                    break;
+                case "items":
+                    TerraScraper.ItemScraper.ScrapeAllItems(caller);
+                    break;
+                case "recipes":
+                    TerraScraper.RecipeScraper.ScrapeAllRecipes(caller);
+                    break;
+            }
         }
+        catch (Exception e)
+        {
+            caller.Reply("An error occured: " + e.Message);
+        }
+
     }
 
     private void ModHelp(CommandCaller caller)

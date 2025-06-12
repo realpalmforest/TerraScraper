@@ -25,7 +25,7 @@ public class ItemScraper
             string itemName = Lang.GetItemNameValue(i);
 
             if (string.IsNullOrEmpty(itemName))
-                return;
+                continue;
 
             if (i >= ItemID.Count)
             {

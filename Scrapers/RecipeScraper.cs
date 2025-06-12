@@ -37,7 +37,7 @@ public class RecipeScraper
         foreach (var modRecipes in recipeDatas)
         {
             string json = JsonSerializer.Serialize(modRecipes.Value.ToArray());
-            File.WriteAllText(Path.Combine(recipesPath, $"recipes_{modRecipes.Key}.json"), json);
+            File.WriteAllText(Path.Combine(recipesPath, $"{modRecipes.Key}.json"), json);
         }
 
         caller.Reply($"\nAll recipes have been succesfully saved to '{recipesPath}'", Color.LimeGreen);
