@@ -9,20 +9,6 @@ namespace TerraScraper.Utility;
 
 public static class ScrapeHandler
 {
-    public static void RunScraper(Scraper scraper, CommandCaller caller)
-    {
-        try
-        {
-            scraper.PreScrape(caller);
-            scraper.ScrapeAll(caller);
-            scraper.PostScrape(caller);
-        }
-        catch (Exception e)
-        {
-            caller.Reply($"Encountered error within {scraper.GetType().Name}:\n{e.Message}");
-        }
-    }
-
     public static string ValidateFilename(string name, string replacement = " ")
     {
         var invalidChars = Path.GetInvalidFileNameChars();

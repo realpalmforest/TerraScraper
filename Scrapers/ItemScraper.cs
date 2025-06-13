@@ -9,17 +9,17 @@ using Terraria.ModLoader;
 
 namespace TerraScraper.Scrapers;
 
-public class ItemScraper
+public class ItemScraper : Scraper
 {
-    private string itemsPath = Path.Combine(TerraScraper.SavePath, "Items");
-
-    public void ScrapeAllItems(CommandCaller caller)
+    public ItemScraper()
     {
-        SoundEngine.PlaySound(SoundID.Duck);
+        SetPath("Items");
+        Command = "items";
+        Description = "Scrapes all the game's items for their textures and saves them as PNGs.";
+    }
 
-        //if (Directory.Exists(itemsPath))
-        //    Directory.Delete(itemsPath, true);
-
+    public override void ScrapeAll(CommandCaller caller)
+    {
         for (int i = 0; i < ItemLoader.ItemCount; i++)
         {
             string itemName = Lang.GetItemNameValue(i);
@@ -41,10 +41,12 @@ public class ItemScraper
 
             ScrapeItem(caller, i, itemName, "Vanilla");
         }
+    }
 
+    public override void PostScrape(CommandCaller caller)
+    {
         caller.Reply($"\nAll items have been succesfully saved to '{itemsPath}'", Color.LimeGreen);
-
-        SoundEngine.PlaySound(SoundID.AchievementComplete);
+        base.PostScrape(caller);
     }
 
     public void ScrapeItem(CommandCaller caller, int id, string name, string folder)
@@ -79,8 +81,5 @@ public class ItemScraper
         {
             firstFrame.SaveAsPng(stream, firstFrame.Width, firstFrame.Height);
         }
-
-
-        // caller.Reply($"Saved '{name}.png' to '{path}'", Color.Green);
     }
 }

@@ -1,6 +1,7 @@
 using System;
 using System.IO;
 using Terraria.ModLoader;
+using TerraScraper.Components;
 using TerraScraper.Scrapers;
 
 namespace TerraScraper;
@@ -12,9 +13,6 @@ public class TerraScraper : Mod
 
     public TerraScraper() : base()
     {
-
+        ScraperLoader.LoadScrapers(SavePath);
     }
-
-    public static ItemScraper ItemScraper = new ItemScraper();
-    public static RecipeScraper RecipeScraper = new RecipeScraper();
 }

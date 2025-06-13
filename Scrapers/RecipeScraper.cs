@@ -18,13 +18,12 @@ public class RecipeScraper : Scraper
     public RecipeScraper()
     {
         SetPath("Recipes");
+        Command = "recipes";
+        Description = "Scrapes all recips and saves them to a json file.";
     }
 
-    public override void ScrapeAll(CommandCaller caller)
+    public override void RunScrape(CommandCaller caller)
     {
-        Directory.CreateDirectory(Path);
-        SoundEngine.PlaySound(SoundID.Duck);
-
         recipeDatas = new();
 
         // Get recipe data of each recipe
@@ -42,12 +41,15 @@ public class RecipeScraper : Scraper
             string json = JsonSerializer.Serialize(modRecipes.Value.ToArray());
             File.WriteAllText(Path.Combine(recipesPath, $"{modRecipes.Key}.json"), json);
         }
-
-        caller.Reply($"\nAll recipes have been succesfully saved to '{recipesPath}'", Color.LimeGreen);
-        SoundEngine.PlaySound(SoundID.AchievementComplete);
     }
 
-    public void ScrapeRecipe(CommandCaller caller, Recipe recipe, ref Dictionary<string, List<RecipeData>> datas)
+    public override void PostScrape(CommandCaller caller)
+    {
+        caller.Reply($"\nAll recipes have been succesfully saved to '{recipesPath}'", Color.LimeGreen);
+        base.PostScrape(caller);
+    }
+
+    private void ScrapeRecipe(CommandCaller caller, Recipe recipe, ref Dictionary<string, List<RecipeData>> datas)
     {
         Item result = recipe.createItem;
         Item[] ingredients = recipe.requiredItem.ToArray();
@@ -84,44 +86,5 @@ public class RecipeScraper : Scraper
         // Add the recipe data to the dictionary
         datas.TryAdd(modName, [data]);
         datas[modName].Add(data);
-    }
-
-    private static ItemData GetItemData(Item item)
-    {
-        StringBuilder tooltip = new StringBuilder();
-
-        for (int j = 0; j < item.ToolTip.Lines; j++)
-        {
-            if (j == item.ToolTip.Lines - 1)
-            {
-                tooltip.Append(item.ToolTip.GetLine(j));
-                break;
-            }
-
-            tooltip.AppendLine(item.ToolTip.GetLine(j));
-        }
-
-        return new ItemData() { Name = item.Name, Tooltip = tooltip.ToString(), Quantity = item.stack };
-    }
-
-    private static ItemData GetWorkstationData(int tileId)
-    {
-        Item item = new Item();
-
-        // Vanilla tile
-        if (tileId < TileID.Count)
-        {
-
-        }
-        // Modded tile
-        else
-        {
-
-        }
-
-        int itemId = TileLoader.GetItemDropFromTypeAndStyle(tileId);
-        item.SetDefaults(itemId);
-
-        return GetItemData(item);
     }
 }

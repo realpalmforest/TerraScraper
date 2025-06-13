@@ -10,7 +10,9 @@ public abstract class Scraper
 {
     public string SavePath { get; private set; } = TerraScraper.SavePath;
     public string Command { get; set; }
+    public string Description { get; set; } = "Scraper module.";
 
+    /// <summary>Runs the setup method before the main scrape process. To run full scrape please use <see cref="ScrapeAll(CommandCaller)"/></summary>
     public virtual void PreScrape(CommandCaller caller)
     {
         if (caller == null || string.IsNullOrEmpty(SavePath) || string.IsNullOrEmpty(Command))
@@ -20,15 +22,29 @@ public abstract class Scraper
         SoundEngine.PlaySound(SoundID.Duck);
     }
 
-    public virtual void ScrapeAll(CommandCaller caller)
+    /// <summary>Runs main scrape process. To run full scrape please use <see cref="ScrapeAll(CommandCaller)"/>.</summary>
+    public virtual void RunScrape(CommandCaller caller)
     {
-        if (caller == null)
-            return;
     }
 
+    /// <summary>Runs final cleanup after main scrape step. To run full scrape please use <see cref="ScrapeAll(CommandCaller)"/></summary>
     public virtual void PostScrape(CommandCaller caller)
     {
+        SoundEngine.PlaySound(SoundID.AchievementComplete);
+    }
 
+    public void ScrapeAll(CommandCaller caller)
+    {
+        try
+        {
+            this.PreScrape(caller);
+            this.RunScrape(caller);
+            this.PostScrape(caller);
+        }
+        catch (Exception e)
+        {
+            caller.Reply($"Encountered error while running scrape steps of {scraper.GetType().Name}:\n{e.Message}");
+        }
     }
 
     /// <summary>
