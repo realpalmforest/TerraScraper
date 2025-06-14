@@ -18,7 +18,7 @@ public class ItemScraper : Scraper
         Description = "Scrapes all the game's items for their textures and saves them as PNGs.";
     }
 
-    public override void RunScrape(Player player)
+    public override void RunScrape()
     {
         for (int i = 0; i < ItemLoader.ItemCount; i++)
         {
@@ -43,10 +43,10 @@ public class ItemScraper : Scraper
         }
     }
 
-    public override void PostScrape(Player player)
+    public override void PostScrape()
     {
-        PlayerTools.SendMessage(player, $"\nAll items have been succesfully saved to '{SavePath}'", Color.LimeGreen);
-        base.PostScrape(player);
+        Main.NewText($"All items have been succesfully saved to '{SavePath}'", Color.LimeGreen);
+        base.PostScrape();
     }
 
     private void ScrapeItem(int id, string name, string folder)

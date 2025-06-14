@@ -19,7 +19,7 @@ public class RecipeScraper : Scraper
         Description = "Scrapes all recips and saves them to a json file.";
     }
 
-    public override void RunScrape(Player player)
+    public override void RunScrape()
     {
         recipeDatas = new();
 
@@ -40,10 +40,10 @@ public class RecipeScraper : Scraper
         }
     }
 
-    public override void PostScrape(Player player)
+    public override void PostScrape()
     {
-        PlayerTools.SendMessage(player, $"\nAll recipes have been succesfully saved to '{SavePath}'", Color.LimeGreen);
-        base.PostScrape(player);
+        Main.NewText($"All recipes have been succesfully saved to '{SavePath}'", Color.LimeGreen);
+        base.PostScrape();
     }
 
     private void ScrapeRecipe(Recipe recipe, ref Dictionary<string, List<RecipeData>> datas)
