@@ -2,12 +2,10 @@
 using System.IO;
 using System.Linq;
 using System.Text;
-using Terraria.ModLoader;
-using TerraScraper.Scrapers;
 
 namespace TerraScraper.Utility;
 
-public static class ScrapeHandler
+public static class FileTools
 {
     public static string ValidateFilename(string name, string replacement = " ")
     {

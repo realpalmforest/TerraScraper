@@ -30,7 +30,7 @@ public abstract class Scraper
     /// <summary>Runs final cleanup after main scrape step. To run full scrape please use <see cref="ScrapeAll(CommandCaller)"/></summary>
     public virtual void PostScrape(CommandCaller caller)
     {
-        SoundEngine.PlaySound(SoundID.AchievementComplete);
+        SoundEngine.PlaySound(SoundID.Unlock);
     }
 
     public void ScrapeAll(CommandCaller caller)
@@ -43,7 +43,7 @@ public abstract class Scraper
         }
         catch (Exception e)
         {
-            caller.Reply($"Encountered error while running scrape steps of {scraper.GetType().Name}:\n{e.Message}");
+            caller.Reply($"Encountered error while running scrape steps of {this.GetType().Name}:\n{e.Message}");
         }
     }
 

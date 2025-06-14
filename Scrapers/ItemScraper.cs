@@ -2,10 +2,10 @@
 using Microsoft.Xna.Framework.Graphics;
 using System.IO;
 using Terraria;
-using Terraria.Audio;
 using Terraria.GameContent;
 using Terraria.ID;
 using Terraria.ModLoader;
+using TerraScraper.Utility;
 
 namespace TerraScraper.Scrapers;
 
@@ -18,7 +18,7 @@ public class ItemScraper : Scraper
         Description = "Scrapes all the game's items for their textures and saves them as PNGs.";
     }
 
-    public override void ScrapeAll(CommandCaller caller)
+    public override void RunScrape(CommandCaller caller)
     {
         for (int i = 0; i < ItemLoader.ItemCount; i++)
         {
@@ -45,11 +45,11 @@ public class ItemScraper : Scraper
 
     public override void PostScrape(CommandCaller caller)
     {
-        caller.Reply($"\nAll items have been succesfully saved to '{itemsPath}'", Color.LimeGreen);
+        caller.Reply($"\nAll items have been succesfully saved to '{SavePath}'", Color.LimeGreen);
         base.PostScrape(caller);
     }
 
-    public void ScrapeItem(CommandCaller caller, int id, string name, string folder)
+    private void ScrapeItem(CommandCaller caller, int id, string name, string folder)
     {
         if (!TextureAssets.Item[id].IsLoaded)
             Main.instance.LoadItem(id);
@@ -74,9 +74,9 @@ public class ItemScraper : Scraper
         else firstFrame = texture;
 
 
-        Directory.CreateDirectory(Path.Combine(itemsPath, folder));
+        Directory.CreateDirectory(Path.Combine(SavePath, folder));
 
-        string path = Path.Combine(itemsPath, folder, $"{TerraScraper.ValidateFilename(name)}.png");
+        string path = Path.Combine(SavePath, folder, $"{FileTools.ValidateFilename(name)}.png");
         using (FileStream stream = File.Create(path))
         {
             firstFrame.SaveAsPng(stream, firstFrame.Width, firstFrame.Height);

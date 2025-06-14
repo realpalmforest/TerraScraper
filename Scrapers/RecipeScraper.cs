@@ -1,13 +1,11 @@
 ﻿using Microsoft.Xna.Framework;
 using System.Collections.Generic;
 using System.IO;
-using System.Text;
 using System.Text.Json;
 using Terraria;
-using Terraria.Audio;
-using Terraria.ID;
 using Terraria.ModLoader;
 using TerraScraper.Data;
+using TerraScraper.Utility;
 
 namespace TerraScraper.Scrapers;
 
@@ -39,13 +37,13 @@ public class RecipeScraper : Scraper
         foreach (var modRecipes in recipeDatas)
         {
             string json = JsonSerializer.Serialize(modRecipes.Value.ToArray());
-            File.WriteAllText(Path.Combine(recipesPath, $"{modRecipes.Key}.json"), json);
+            File.WriteAllText(Path.Combine(SavePath, $"{modRecipes.Key}.json"), json);
         }
     }
 
     public override void PostScrape(CommandCaller caller)
     {
-        caller.Reply($"\nAll recipes have been succesfully saved to '{recipesPath}'", Color.LimeGreen);
+        caller.Reply($"\nAll recipes have been succesfully saved to '{SavePath}'", Color.LimeGreen);
         base.PostScrape(caller);
     }
 
@@ -64,18 +62,18 @@ public class RecipeScraper : Scraper
         ItemData[] ingredientDatas = new ItemData[ingredients.Length];
         for (int i = 0; i < ingredients.Length; i++)
         {
-            ingredientDatas[i] = GetItemData(ingredients[i]);
+            ingredientDatas[i] = DataTools.GetItemData(ingredients[i]);
         }
 
         ItemData[] workstationDatas = new ItemData[workstations.Count];
         for (int i = 0; i < workstations.Count; i++)
         {
-            workstationDatas[i] = GetWorkstationData(workstations[i]);
+            workstationDatas[i] = DataTools.GetWorkstationData(workstations[i]);
         }
 
         RecipeData data = new RecipeData()
         {
-            Result = GetItemData(result),
+            Result = DataTools.GetItemData(result),
             Ingredients = ingredientDatas,
             Workstations = workstationDatas,
             Id = recipe.RecipeIndex
