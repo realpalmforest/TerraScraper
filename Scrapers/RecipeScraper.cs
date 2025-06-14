@@ -82,7 +82,9 @@ public class RecipeScraper : Scraper
         string modName = recipe.Mod == null ? "Vanilla" : recipe.Mod.Name;
 
         // Add the recipe data to the dictionary
-        datas.TryAdd(modName, [data]);
-        datas[modName].Add(data);
+        if (!datas.TryAdd(modName, [data]))
+        {
+            datas[modName].Add(data);
+        }
     }
 }
