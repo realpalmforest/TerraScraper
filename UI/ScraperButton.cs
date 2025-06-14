@@ -1,12 +1,8 @@
 ﻿using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Content;
-using Terraria.ModLoader;
-using Terraria.UI;
-using Terraria.GameContent.UI.Elements;
 using Terraria;
+using Terraria.GameContent.UI.Elements;
 using TerraScraper.Scrapers;
-using Microsoft.Xna.Framework;
-using static System.Net.Mime.MediaTypeNames;
 
 namespace TerraScraper.UI;
 
@@ -21,7 +17,7 @@ public class ScraperButton : UIPanel
 
         SetTexture();
         CreateButton();
-        OnLeftClick += (_, _) => scraper.ScrapeAll(Main.LocalPlayer);
+        OnLeftClick += (_, _) => scraper.ScrapeAll();
     }
 
     private void CreateButton()
