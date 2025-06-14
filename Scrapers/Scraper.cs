@@ -1,8 +1,11 @@
-﻿using System;
+﻿using Microsoft.Xna.Framework;
+using System;
 using System.IO;
+using Terraria;
 using Terraria.Audio;
 using Terraria.ID;
 using Terraria.ModLoader;
+using TerraScraper.Utility;
 
 namespace TerraScraper.Scrapers;
 
@@ -13,37 +16,37 @@ public abstract class Scraper
     public string Description { get; set; } = "Scraper module.";
 
     /// <summary>Runs the setup method before the main scrape process. To run full scrape please use <see cref="ScrapeAll(CommandCaller)"/></summary>
-    public virtual void PreScrape(CommandCaller caller)
+    public virtual void PreScrape(Player player)
     {
-        if (caller == null || string.IsNullOrEmpty(SavePath) || string.IsNullOrEmpty(Command))
-            throw new ArgumentNullException($"{nameof(this.PreScrape)} couldn't execute because either {nameof(caller)} or a Scraper property was null.");
+        if (player == null || string.IsNullOrEmpty(SavePath) || string.IsNullOrEmpty(Command))
+            throw new ArgumentNullException($"{nameof(this.PreScrape)} couldn't execute because either the Player or a Scraper property was null.");
 
         Directory.CreateDirectory(SavePath);
         SoundEngine.PlaySound(SoundID.Duck);
     }
 
     /// <summary>Runs main scrape process. To run full scrape please use <see cref="ScrapeAll(CommandCaller)"/>.</summary>
-    public virtual void RunScrape(CommandCaller caller)
+    public virtual void RunScrape(Player player)
     {
     }
 
     /// <summary>Runs final cleanup after main scrape step. To run full scrape please use <see cref="ScrapeAll(CommandCaller)"/></summary>
-    public virtual void PostScrape(CommandCaller caller)
+    public virtual void PostScrape(Player player)
     {
         SoundEngine.PlaySound(SoundID.Unlock);
     }
 
-    public void ScrapeAll(CommandCaller caller)
+    public void ScrapeAll(Player player)
     {
         try
         {
-            this.PreScrape(caller);
-            this.RunScrape(caller);
-            this.PostScrape(caller);
+            this.PreScrape(player);
+            this.RunScrape(player);
+            this.PostScrape(player);
         }
         catch (Exception e)
         {
-            caller.Reply($"Encountered error while running scrape steps of {this.GetType().Name}:\n{e.Message}");
+            PlayerTools.SendMessage(player, $"Encountered error while running scrape steps of {this.GetType().Name}:\n{e.Message}", Color.Firebrick);
         }
     }
 

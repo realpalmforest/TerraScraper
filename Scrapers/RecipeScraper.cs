@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text.Json;
 using Terraria;
-using Terraria.ModLoader;
 using TerraScraper.Data;
 using TerraScraper.Utility;
 
@@ -20,7 +19,7 @@ public class RecipeScraper : Scraper
         Description = "Scrapes all recips and saves them to a json file.";
     }
 
-    public override void RunScrape(CommandCaller caller)
+    public override void RunScrape(Player player)
     {
         recipeDatas = new();
 
@@ -30,7 +29,7 @@ public class RecipeScraper : Scraper
             if (recipe == null)
                 continue;
 
-            ScrapeRecipe(caller, recipe, ref recipeDatas);
+            ScrapeRecipe(recipe, ref recipeDatas);
         }
 
         // Write the recipes of each mod to a seperate file
@@ -41,13 +40,13 @@ public class RecipeScraper : Scraper
         }
     }
 
-    public override void PostScrape(CommandCaller caller)
+    public override void PostScrape(Player player)
     {
-        caller.Reply($"\nAll recipes have been succesfully saved to '{SavePath}'", Color.LimeGreen);
-        base.PostScrape(caller);
+        PlayerTools.SendMessage(player, $"\nAll recipes have been succesfully saved to '{SavePath}'", Color.LimeGreen);
+        base.PostScrape(player);
     }
 
-    private void ScrapeRecipe(CommandCaller caller, Recipe recipe, ref Dictionary<string, List<RecipeData>> datas)
+    private void ScrapeRecipe(Recipe recipe, ref Dictionary<string, List<RecipeData>> datas)
     {
         Item result = recipe.createItem;
         Item[] ingredients = recipe.requiredItem.ToArray();

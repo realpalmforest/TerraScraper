@@ -1,7 +1,9 @@
 ﻿using Microsoft.Xna.Framework;
 using System.Text;
+using Terraria;
 using Terraria.ModLoader;
 using TerraScraper.Scrapers;
+using TerraScraper.Utility;
 
 namespace TerraScraper.Components;
 
@@ -15,18 +17,18 @@ public class CommandHandler : ModCommand
     {
         if (args.Length != 1)
         {
-            ModHelp(caller);
+            ModHelp(caller.Player);
             return;
         }
 
         Scraper scraper = ScraperLoader.ScraperStack.Find(scr => scr.Command == args[0].ToLower().Trim());
 
         if (scraper == null)
-            ModHelp(caller);
-        else scraper.ScrapeAll(caller);
+            ModHelp(caller.Player);
+        else scraper.ScrapeAll(caller.Player);
     }
 
-    private void ModHelp(CommandCaller caller)
+    private void ModHelp(Player player)
     {
         StringBuilder help = new StringBuilder();
 
@@ -35,6 +37,6 @@ public class CommandHandler : ModCommand
             help.AppendLine($"/{Command} {scraper.Command} — {scraper.Description}");
         }
 
-        caller.Reply(help.ToString(), Color.Goldenrod);
+        PlayerTools.SendMessage(player, help.ToString(), Color.Goldenrod);
     }
 }
